@@ -8,10 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,12 +34,11 @@ public class SearchController {
         return "index";
     }
 
-    @RequestMapping("/s")
+    @RequestMapping(value = "/s",method = RequestMethod.GET)
     public String search(
             @RequestParam("wd") String queryString,
             @RequestParam(value = "pn", required = false, defaultValue = "1") int pageNo,
-            Model model
-    ) {
+            Model model) {
         log.info("搜索参数wd:{},pn:{}", queryString, pageNo);
         Page<Movie> page = movieRepository.query(queryString, pageNo, 10);
         model.addAttribute("page", page);
@@ -51,10 +47,7 @@ public class SearchController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(
-            @PathVariable("id") String id,
-            Model model
-    ) {
+    public String detail(@PathVariable("id") String id, Model model) {
         Movie movie = movieRepository.get(id);
         model.addAttribute("movie", movie);
         return "detail";
